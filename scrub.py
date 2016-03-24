@@ -2,14 +2,14 @@
 """Module for converting raw knights and knaves puzzles into a standard format."""
 
 from __future__ import print_function
-import re
+
+from symbolizer import symbolize
 
 templates = set([])
 
 
 def parse(puzzle):
     """Parse puzzles of form {name: claim} into symbolized form."""
-
     def templatize(names, claim):
         """Transform a claim into a regex-capable template."""
         for name in names:
@@ -27,113 +27,6 @@ def parse(puzzle):
 
         return claim.lower()
 
-    def validate(template):
-        """Validate a given template."""
-
-        # Handle 2AND
-        if template == "both name and name are k_ids":
-            return True
-        if template == "both name is a k_id and name is a k_id":
-            return True
-        if template == "name and name are both k_ids":
-            return True
-
-        # Handle ALL(N,...,M) = K_ID
-        if re.match(r"^name( and name)* are k_ids$", template):
-            return True
-
-        # Handle K_id(N1) ... GAND ... K_id(NM)
-        if re.match(r"^(name is a k_id)( and name is a k_id)*$", template):
-            return True
-        if re.match(r"^name know that (name is a k_id)( and that name is a k_id)*$", template):
-            return True
-        if re.match(r"^all of the following is true: (that name is a k_id)( and that name is a k_id)*$", template):
-            return True
-
-        # Handle K_id(N1) ... GOR ... K_id(NM)
-        if re.match(r"^(name is a k_id)( or name is a k_id)*$", template):
-            return True
-        if re.match(r"^at least one of the following is true: (that name is a k_id)( or that name is a k_id)*$", template):
-            return True
-
-        # Handle K_id(N1) XOR K_id(N2)
-        if template == "either name is a k_id or name is a k_id":
-            return True
-        if template == "name and name are different":
-            return True
-        if template == "name and name are not the same":
-            return True
-        if template == "of name and name, exactly one is a k_id":
-            return True
-
-        # Handle NOT (K_id(1) ... GAND ... K_id(NM))
-        if re.match(r"^it's false that (name is a k_id)( and name is a k_id)*$", template):
-            return True
-        if re.match(r"^it's false that name know that (name is a k_id)( and that name is a k_id)*$", template):
-            return True
-        if re.match(r"^it's false that all of the following is true: (that name is a k_id)( and that name is a k_id)*$", template):
-            return True
-        if re.match(r"^it's not the case that (name is a k_id)( and name is a k_id)*$", template):
-            return True
-        if re.match(r"^it's not the case that name know that (name is a k_id)( and that name is a k_id)*$", template):
-            return True
-        if re.match(r"^it's not the case that all of the following is true: (that name is a k_id)( and that name is a k_id)*$", template):
-            return True
-
-        # Handle NOT (K_id(1) ... GOR ... K_id(NM))
-        if re.match(r"^it's false that (name is a k_id)( or name is a k_id)*$", template):
-            return True
-        if re.match(r"^it's false that at least one of the following is true: (that name is a k_id)( or that name is a k_id)*$", template):
-            return True
-        if re.match(r"^it's not the case that (name is a k_id)( or name is a k_id)*$", template):
-            return True
-        if re.match(r"^it's not the case that at least one of the following is true: (that name is a k_id)( or that name is a k_id)*$", template):
-            return True
-
-        # Handle K_id(N1) <-> K_id(N2)
-        if template == "name and name are both k_ids or both k_ids":
-            return True
-        if template == "name and name are the same":
-            return True
-
-        # Handle K_id(N1) -> (K_id(N1) ... GAND ... K_id(NM))
-        if re.match(r"^name could claim that (name is a k_id)( and name is a k_id)*$", template):
-            return True
-        if re.match(r"^name could claim that name know that (name is a k_id)( and that name is a k_id)*$", template):
-            return True
-        if re.match(r"^name could claim that all of the following is true: (that name is a k_id)( and that name is a k_id)*$", template):
-            return True
-        if re.match(r"^name could say that (name is a k_id)( and name is a k_id)*$", template):
-            return True
-        if re.match(r"^name could say that name know that (name is a k_id)( and that name is a k_id)*$", template):
-            return True
-        if re.match(r"^name could say that all of the following is true: (that name is a k_id)( and that name is a k_id)*$", template):
-            return True
-        if re.match(r"^name would tell you that (name is a k_id)( and name is a k_id)*$", template):
-            return True
-        if re.match(r"^name would tell you name know that (name is a k_id)( and that name is a k_id)*$", template):
-            return True
-        if re.match(r"^name would tell you all of the following is true: (that name is a k_id)( and that name is a k_id)*$", template):
-            return True
-
-        # Handle K_id(N1) -> (K_id(N1) ... GOR ... K_id(NM))
-        if re.match(r"^name could claim that (name is a k_id)( or name is a k_id)*$", template):
-            return True
-        if re.match(r"^name could claim that at least one of the following is true: (that name is a k_id)( or that name is a k_id)*$", template):
-            return True
-        if re.match(r"^name could say that (name is a k_id)( or name is a k_id)*$", template):
-            return True
-        if re.match(r"^name could say that at least one of the following is true: (that name is a k_id)( or that name is a k_id)*$", template):
-            return True
-        if re.match(r"^name would tell you that (name is a k_id)( or name is a k_id)*$", template):
-            return True
-        if re.match(r"^name would tell you at least one of the following is true: (that name is a k_id)( or that name is a k_id)*$", template):
-            return True
-
-        # Handle K_id(N1) NOR K_id(N2)
-        if template == "neither name nor name are k_ids":
-            return True
-
     # Replace instances of "I" with name of speaker
     puzzle = {name: claim.replace(" I ", " " + name + " ").replace("I ", name + " ").replace(" I", " " + name)
               for name, claim in puzzle.iteritems()}
@@ -143,12 +36,21 @@ def parse(puzzle):
 
         # transform given claim into a template
         template = templatize(names, claim)
-        if not validate(template):
-            if "Only" not in claim and "only" not in claim:
-                print (claim)
 
-        # global templates
-        # templates.add(claim)
+        symbolic_claim = symbolize(claim, template)
+
+        print (symbolic_claim)
+        """
+        if (validate(claim, template)):
+            print (validate(claim, template))
+
+        if not validate(claim, template):
+            if "Only" not in claim and "only" not in claim:
+                pass  # print (claim)
+
+        global templates
+        templates.add(claim)
+        """
 
 
 def clean(puzzle):
@@ -220,7 +122,7 @@ def main():
     global templates
     templates = sorted(list(templates))
     for template in templates:
-        print (template)
+        pass  # print (template)
 
 if __name__ == "__main__":
     main()
