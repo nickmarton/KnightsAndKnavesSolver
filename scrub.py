@@ -3,7 +3,8 @@
 
 from __future__ import print_function
 
-from symbolizer import symbolize
+import pycosat
+from symbolizer import to_cnf
 
 templates = set([])
 
@@ -32,25 +33,22 @@ def parse(puzzle):
               for name, claim in puzzle.iteritems()}
 
     names = puzzle.keys()
-    for claim in puzzle.values():
+    name_map = {names[i]: i + 1 for i in range(len(names))}
+    inverse_name_map = {int_id: name for name, int_id in name_map.iteritems()}
+
+    puzzle_cnf = []
+    for speaker, claim in puzzle.iteritems():
 
         # transform given claim into a template
         template = templatize(names, claim)
 
-        symbolic_claim = symbolize(claim, template)
-
-        print (symbolic_claim)
-        """
-        if (validate(claim, template)):
-            print (validate(claim, template))
-
-        if not validate(claim, template):
-            if "Only" not in claim and "only" not in claim:
-                pass  # print (claim)
+        cnf_claim = to_cnf(claim, template, speaker, name_map)
+        puzzle_cnf.extend(cnf_claim)
 
         global templates
-        templates.add(claim)
-        """
+        templates.add(template)
+
+    return puzzle_cnf, inverse_name_map
 
 
 def clean(puzzle):
@@ -103,8 +101,19 @@ def clean(puzzle):
 def process(puzzle):
     """Process an individual knights and knaves problem."""
     puzzle = clean(puzzle)
-    parse(puzzle)
-    # print("=" * 50)
+    cnf, inverse_name_map = parse(puzzle)
+    # print (cnf)
+    add_kid = lambda x, i: "knight(" + x + ")" if i > 0 else "knave(" + x + ")"
+
+    if pycosat.solve(cnf) == "UNSAT":
+        print ("No Solution")
+    else:
+        results = pycosat.itersolve(cnf)
+        for result in results:
+            result = [add_kid(inverse_name_map[abs(i)], i) for i in result]
+            print (result)
+
+        print ()
 
 
 def main():
