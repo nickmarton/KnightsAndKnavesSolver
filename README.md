@@ -3,7 +3,7 @@
 
 ### How To Use
 ---
-First, the pycosat dependency found [here](https://pypi.python.org/pypi/pycosat) must be installed.
+First, the pycosat dependency found [here](https://pypi.python.org/pypi/pycosat) must be installed, then just run solver.py.
 
 This program uses the examples found [here](http://philosophy.hku.hk/think/logic/knights.php) as templates for input. To that end, a puzzle is captured entirely in a string (e.g. "You meet two inhabitants: Zoey and Mel.  Zoey tells you that Mel is a knave.  Mel says, `Neither Zoey nor I are knaves.'").
 For each sentence following the first, the form is name-claim. The uninformative leading words after the name and before the claim (e.g. "claims ", "says that ", etc.) will try to be stripped away. The following templates are supported (where each template is a single claim made by an inhabitant of the island, i.e., the claim part of the name-claim form):
