@@ -125,7 +125,7 @@ def process(puzzle, do_clean=True):
 def main():
     """Entry point."""
 
-    cmds = ["help", "new puzzle", "show", "solve", "clear", "add", "quit()"]
+    cmds = ["help", "new puzzle", "show", "solve", "clear", "add", "quit()", "list"]
 
     puzzles = []
     with open("raw.txt", "r") as f:
@@ -134,9 +134,17 @@ def main():
 
     # Index all solutions from website
     solutions = {}
+    no_solutions = {}
+    multi_solutions = {}
     for index, puzzle in enumerate(puzzles):
         parsed_puzzles = process(puzzle)
         solutions[index + 1] = (puzzle, parsed_puzzles)
+
+        if not parsed_puzzles:
+            no_solutions[index + 1] = (puzzle, parsed_puzzles)
+
+        if len(parsed_puzzles) > 1:
+            multi_solutions[index + 1] = (puzzle, parsed_puzzles)
 
     # Bring templates into local scope
     global templates
@@ -167,6 +175,9 @@ def main():
             print ("Add a name and claim to the interactive mode puzzle (where the claim has a supported template).\n")
         if cmd == "help quit()":
             print ("Exit the Knights and Knaves session.\n")
+        if cmd == "help list":
+            print ("Enter 'list no solutions' to list all puzzles with no solutions")
+            print ("Enter 'list multiple solutions' to list all puzzles with multiple solutions")
 
         if cmd == "clear":
             os.system("clear")
@@ -203,6 +214,14 @@ def main():
             claim = raw_input()
             interactive_claims[name] = claim
             print ()
+
+        if cmd == "list no solutions":
+            print ("The following puzzles have no solutions:")
+            print (", ".join([str(puzzle_id) for puzzle_id in sorted(no_solutions.keys())]) + '\n')
+
+        if cmd == "list multiple solutions":
+            print ("The following puzzles have multiple solutions:")
+            print (", ".join([str(puzzle_id) for puzzle_id in sorted(multi_solutions.keys())]) + '\n')
 
         args = cmd.split()
 

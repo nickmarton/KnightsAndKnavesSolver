@@ -63,4 +63,5 @@ Interactive mode supports the following commands:
 * "solve": Attempt to solve the current interactive puzzle, using the claims made through the "add" command.
 * "clear": Clear the terminal.
 * "add":  Add a claim to the interactive puzzle by listing who said it (name) and what they said (claim) where claim must have the form of a supported template.
-* "quit()": Quit the Knights and Knaves session. 
+* "quit()": Quit the Knights and Knaves session.
+* "list": List all puzzles with either no solutions (i.e., "list no solutions") or all puzzles with multiple solutions (i.e., "list all solutions").
