@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Module for converting raw knights and knaves puzzles into a standard format."""
+"""Module for solving knights and knaves puzzles."""
 
 from __future__ import print_function
 
@@ -151,7 +151,22 @@ def main():
 
         if cmd == "help":
             print ("Enter one of the following commands or 'help [cmd]' for a more detailed description.")
-            print (" | ".join(cmds))
+            print (" | ".join(cmds) + "\n")
+
+        if cmd == "help new puzzle":
+            print("Start a new puzzle in interactive mode, clearing the old added entries.\n")
+        if cmd == "help show":
+            print ("Enter 'show solution i' to show the solution to puzzle i or to all puzzles.")
+            print ("Enter 'show solution all' to show the solution to all puzzles in order.")
+            print ("Enter 'show templates' to show the available templates supported.\n")
+        if cmd == "help solve":
+            print ("Solve the interactive mode puzzle; try to find a solution for all added claims.\n")
+        if cmd == "help clear":
+            print ("Clear the terminal screen.\n")
+        if cmd == "help add":
+            print ("Add a name and claim to the interactive mode puzzle (where the claim has a supported template).\n")
+        if cmd == "help quit()":
+            print ("Exit the Knights and Knaves session.\n")
 
         if cmd == "clear":
             os.system("clear")
@@ -225,6 +240,7 @@ def main():
                         except ValueError:
                             if args[2] == "all":
                                 for puzzle, solution_set in solutions.values():
+                                    print ("PUZZLE: " + str(sol_id))
                                     print (puzzle)
                                     print ()
                                     if solution_set:

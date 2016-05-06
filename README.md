@@ -50,3 +50,17 @@ For each sentence following the first, the form is name-claim. The uninformative
 	* "neither name nor name are k_ids"
 
 where name is substituted by a name of the inhabitant and k_id(s) is substituted by knight(s)/knave(s) respectively.
+
+### Interactive Mode
+---
+In interactive mode, users can generate and subsequently solve their own knights and knaves puzzles. Additionally, the user can show the solution to any puzzle from the examples.
+
+Interactive mode supports the following commands:
+
+* "help": Show all commands supported in interactive mode or show more detail for a given command by following "help" with the string for another command (e.g. "help solve"). 
+* "new puzzle": Begin a new interactive Knights and Knaves puzzle, clearing any added claims beforehand.
+* "show": Show either templates (i.e., "show templates"), a specfic solution for a puzzle from the examples (e.g. "show solution 8" for the solution to puzzle 8), or show all solutions to the examples (i.e., "show solution all").
+* "solve": Attempt to solve the current interactive puzzle, using the claims made through the "add" command.
+* "clear": Clear the terminal.
+* "add":  Add a claim to the interactive puzzle by listing who said it (name) and what they said (claim) where claim must have the form of a supported template.
+* "quit()": Quit the Knights and Knaves session. 

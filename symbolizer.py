@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 """Module for converting raw knights and knaves puzzles into a standard format."""
 
-from __future__ import print_function
-
 
 def to_cnf(claim, template, speaker, name_map):
     """."""
